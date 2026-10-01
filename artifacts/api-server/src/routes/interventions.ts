@@ -1,0 +1,166 @@
+import { Router, type IRouter } from "express";
+import { ListInterventionsResponse } from "@workspace/api-zod";
+
+const router: IRouter = Router();
+
+router.get("/interventions", async (_req, res): Promise<void> => {
+  const interventions = [
+    {
+      id: 1,
+      name: "Anganwadi / ICDS Early Childhood Program",
+      level: "early_childhood" as const,
+      description: "The Integrated Child Development Services scheme delivers pre-school nutrition and education via Anganwadi centers. Villages with high Anganwadi quality show better school readiness. Programs providing early learning materials have raised ECCE enrolment.",
+      impact: "Children in high-quality Anganwadis show 20-30% better school readiness scores. Nationwide coverage of 1.4 million centers reaches 80+ million beneficiaries.",
+      organization: "Ministry of Women & Child Development",
+      organizationUrl: "https://wcd.gov.in",
+      organizationLinks: [
+        { name: "Ministry of Women & Child Development", url: "https://wcd.gov.in" },
+        { name: "ICDS – Anganwadi Services Scheme", url: "https://wcd.gov.in/schemes/anganwadi-services" },
+        { name: "UNICEF India – Early Childhood", url: "https://www.unicef.org/india/what-we-do/ecd" },
+      ],
+      evidenceLevel: "strong" as const,
+    },
+    {
+      id: 2,
+      name: "Teaching at the Right Level (TaRL)",
+      level: "primary" as const,
+      description: "Pratham's methodology regroups children by skill level rather than age/grade and teaches via play and basic activities. J-PAL impact evaluations show short TaRL learning camps doubled the number of grade-3 children reading at grade level.",
+      impact: "Doubled grade-level reading rates in intervention schools. Now scaled to 15+ Indian states under the NIPUN Bharat mission.",
+      organization: "Pratham / J-PAL",
+      organizationUrl: "https://www.pratham.org",
+      organizationLinks: [
+        { name: "Pratham", url: "https://www.pratham.org" },
+        { name: "J-PAL South Asia", url: "https://www.povertyactionlab.org/south-asia" },
+        { name: "TaRL Africa (Global)", url: "https://www.teachingattherightlevel.org" },
+        { name: "NIPUN Bharat Mission", url: "https://nipunbharat.education.gov.in" },
+      ],
+      evidenceLevel: "rigorous_rct" as const,
+    },
+    {
+      id: 3,
+      name: "National Mid-Day Meal Scheme (PM POSHAN)",
+      level: "primary" as const,
+      description: "Free cooked meals provided to 120+ million school children daily. Studies confirm MDMS significantly increases enrollment, reduces absenteeism, and improves nutrition — especially among girls and the poor. Reduces the effective cost of schooling for poor families.",
+      impact: "Enrollment increased 15-20% in states with strong MDMS implementation. Female enrollment improved particularly in Rajasthan and Madhya Pradesh.",
+      organization: "Ministry of Education, Govt. of India",
+      organizationUrl: "https://pmposhan.education.gov.in",
+      organizationLinks: [
+        { name: "PM POSHAN (Mid-Day Meal) Official Portal", url: "https://pmposhan.education.gov.in" },
+        { name: "Ministry of Education", url: "https://www.education.gov.in" },
+        { name: "Samagra Shiksha", url: "https://samagrashiksha.in" },
+      ],
+      evidenceLevel: "strong" as const,
+    },
+    {
+      id: 4,
+      name: "Conditional Scholarships for Girl Students",
+      level: "secondary" as const,
+      description: "State-level cash transfer and scholarship programs like Bihar ST Girls Scholarship and Telangana Pelli Kanuka (conditional on staying in school) have raised female secondary enrollment. Financial incentives address both opportunity cost and direct costs of schooling.",
+      impact: "Female secondary enrollment rose by 18-25% in states with well-implemented conditional transfer programs.",
+      organization: "State Governments (Bihar, Rajasthan, Telangana, MP)",
+      organizationUrl: "https://scholarships.gov.in",
+      organizationLinks: [
+        { name: "National Scholarship Portal", url: "https://scholarships.gov.in" },
+        { name: "Bihar Education Project Council", url: "https://bepcssa.in" },
+        { name: "Rajasthan Gargi Puraskar Scheme", url: "https://rajshaladarpan.nic.in" },
+        { name: "UNICEF India – Girls' Education", url: "https://www.unicef.org/india/what-we-do/quality-learning" },
+      ],
+      evidenceLevel: "moderate" as const,
+    },
+    {
+      id: 5,
+      name: "Akanksha Foundation Mentorship Model",
+      level: "secondary" as const,
+      description: "NGO model combining mentorship, psychosocial support, life skills education, and parent engagement in partnership with municipal governments. Targets urban slum children and runs centres in Mumbai and Pune within government school premises.",
+      impact: "90% of Akanksha students complete secondary education vs 60% municipal school average. Students show significantly higher college entrance exam performance.",
+      organization: "Akanksha Foundation",
+      organizationUrl: "https://www.akanksha.org",
+      organizationLinks: [
+        { name: "Akanksha Foundation", url: "https://www.akanksha.org" },
+        { name: "Brihanmumbai Municipal Corporation (BMC)", url: "https://portal.mcgm.gov.in" },
+        { name: "Pune Municipal Corporation (PMC)", url: "https://www.pmc.gov.in" },
+      ],
+      evidenceLevel: "moderate" as const,
+    },
+    {
+      id: 6,
+      name: "PMKVY / Skills India Vocational Training",
+      level: "vocational" as const,
+      description: "Pradhan Mantri Kaushal Vikas Yojana provides free short-term skill training to rural and urban youth across 40+ sectors. Provides industry-aligned certification and placement support. Multidimensional programs combining skills with life skills show highest employability.",
+      impact: "Over 13 million people trained under PMKVY. Post-training employment rates of 50-70% in well-implemented sector programs.",
+      organization: "Ministry of Skill Development and Entrepreneurship",
+      organizationUrl: "https://www.skillindia.gov.in",
+      organizationLinks: [
+        { name: "Skill India Mission", url: "https://www.skillindia.gov.in" },
+        { name: "PMKVY 4.0 (via Skill India)", url: "https://www.pmkvyofficial.org/home-page" },
+        { name: "Ministry of Skill Development", url: "https://www.msde.gov.in" },
+        { name: "National Skill Development Corporation (NSDC)", url: "https://nsdcindia.org" },
+      ],
+      evidenceLevel: "moderate" as const,
+    },
+    {
+      id: 7,
+      name: "Saakshar Bharat / New India Literacy Programme",
+      level: "adult" as const,
+      description: "Ran 7.7 million adult literacy classes across India, particularly targeting women in rural areas. Evaluations found modest but significant improvements in adult reading/writing rates in Rajasthan, Madhya Pradesh, and Uttar Pradesh.",
+      impact: "Raised functional literacy rates among women by 8-12% in target districts. Multi-generational learning centres allow adult women to learn alongside children.",
+      organization: "Ministry of Education, Govt. of India",
+      organizationUrl: "https://www.education.gov.in/adult-education",
+      organizationLinks: [
+        { name: "New India Literacy Programme (NILP)", url: "https://www.education.gov.in/adult-education" },
+        { name: "Ministry of Education", url: "https://www.education.gov.in" },
+        { name: "National Literacy Mission Authority", url: "https://www.nlma.nic.in" },
+      ],
+      evidenceLevel: "moderate" as const,
+    },
+    {
+      id: 8,
+      name: "DIKSHA / Swayam Prabha Digital Platform",
+      level: "digital" as const,
+      description: "DIKSHA provides a national e-content platform with curriculum-aligned digital lessons for K-12 students. Swayam Prabha delivers 12 DTH TV channels with curriculum content to areas without internet. Used extensively during COVID-19 school closures.",
+      impact: "Over 3 billion learning sessions logged on DIKSHA. TV channels reach 35+ million students in remote areas lacking internet access.",
+      organization: "Ministry of Education / NCERT",
+      organizationUrl: "https://diksha.gov.in",
+      organizationLinks: [
+        { name: "DIKSHA Platform", url: "https://diksha.gov.in" },
+        { name: "Swayam Prabha (DTH Channels)", url: "https://swayamprabha.gov.in" },
+        { name: "NCERT", url: "https://ncert.nic.in" },
+        { name: "Ministry of Education", url: "https://www.education.gov.in" },
+      ],
+      evidenceLevel: "pilot" as const,
+    },
+    {
+      id: 9,
+      name: "eVidyaloka Online Tutoring for Rural Schools",
+      level: "digital" as const,
+      description: "Connects urban volunteer teachers to rural classrooms via satellite/internet connectivity and affordable tablet setups. Provides supplementary subject tuition in English, Math, and Science where qualified teachers are unavailable.",
+      impact: "Active in 800+ village schools across 22 states. Students show 35-40% improvement in subject scores after one academic year of supplementary support.",
+      organization: "eVidyaloka",
+      organizationUrl: "https://www.evidyaloka.org",
+      organizationLinks: [
+        { name: "eVidyaloka", url: "https://www.evidyaloka.org" },
+        { name: "NASSCOM Foundation", url: "https://www.nasscomfoundation.org" },
+        { name: "GiveIndia", url: "https://www.giveindia.org" },
+      ],
+      evidenceLevel: "moderate" as const,
+    },
+    {
+      id: 10,
+      name: "Educate Girls Community Mobilization",
+      level: "primary" as const,
+      description: "Leverages trained village volunteers ('Team Balika') to enroll out-of-school girls in Rajasthan and Madhya Pradesh. Partners with the government and UNICEF using data-driven targeting to identify and enroll the hardest-to-reach girls.",
+      impact: "Enrolled 600,000+ out-of-school girls. Won the world's first Development Impact Bond for education, repaying investors after verified outcomes were met.",
+      organization: "Educate Girls",
+      organizationUrl: "https://www.educategirls.ngo",
+      organizationLinks: [
+        { name: "Educate Girls", url: "https://www.educategirls.ngo" },
+        { name: "UNICEF India", url: "https://www.unicef.org/india" },
+        { name: "Children's Investment Fund Foundation (CIFF)", url: "https://ciff.org" },
+      ],
+      evidenceLevel: "rigorous_rct" as const,
+    },
+  ];
+  res.json(ListInterventionsResponse.parse(interventions));
+});
+
+export default router;

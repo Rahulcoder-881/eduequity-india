@@ -1,0 +1,721 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: Education for Unprivileged Communities in India API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: stats
+    description: Key statistics and summary data
+  - name: barriers
+    description: Barriers to education
+  - name: interventions
+    description: Evidence-based interventions
+  - name: case-studies
+    description: Case studies from India
+  - name: funding
+    description: Funding and costs
+  - name: donate
+    description: Donation and contact
+  - name: institutions
+    description: Government colleges and universities
+  - name: exams
+    description: Entrance exams and admission calendar
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /stats/summary:
+    get:
+      operationId: getStatsSummary
+      tags: [stats]
+      summary: Get summary statistics
+      responses:
+        "200":
+          description: Summary statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatsSummary"
+
+  /stats/dropout-rates:
+    get:
+      operationId: getDropoutRates
+      tags: [stats]
+      summary: Get dropout rates by demographic
+      responses:
+        "200":
+          description: Dropout rate data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DropoutRate"
+
+  /stats/states:
+    get:
+      operationId: getStateStats
+      tags: [stats]
+      summary: Get education statistics by Indian state
+      responses:
+        "200":
+          description: State-level education statistics
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StateEducationStat"
+
+  /stats/enrollment-trends:
+    get:
+      operationId: getEnrollmentTrends
+      tags: [stats]
+      summary: Get enrollment trends over years
+      responses:
+        "200":
+          description: Enrollment trend data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EnrollmentTrend"
+
+  /barriers:
+    get:
+      operationId: listBarriers
+      tags: [barriers]
+      summary: List all barriers to education
+      responses:
+        "200":
+          description: List of barriers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Barrier"
+
+  /interventions:
+    get:
+      operationId: listInterventions
+      tags: [interventions]
+      summary: List all interventions
+      responses:
+        "200":
+          description: List of interventions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Intervention"
+
+  /case-studies:
+    get:
+      operationId: listCaseStudies
+      tags: [case-studies]
+      summary: List all case studies
+      responses:
+        "200":
+          description: List of case studies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CaseStudy"
+
+  /funding/mechanisms:
+    get:
+      operationId: listFundingMechanisms
+      tags: [funding]
+      summary: List funding mechanisms
+      responses:
+        "200":
+          description: Funding mechanisms
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FundingMechanism"
+
+  /donate:
+    post:
+      operationId: submitDonation
+      tags: [donate]
+      summary: Submit a donation or support pledge
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DonationRequest"
+      responses:
+        "201":
+          description: Donation recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DonationResponse"
+        "400":
+          description: Invalid input
+
+  /contact:
+    post:
+      operationId: submitContact
+      tags: [donate]
+      summary: Submit a contact or volunteer inquiry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactRequest"
+      responses:
+        "201":
+          description: Contact recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactResponse"
+        "400":
+          description: Invalid input
+
+  /exams:
+    get:
+      operationId: listExams
+      tags: [exams]
+      summary: List all entrance examinations
+      description: Returns all major entrance examinations with dates, eligibility, and accepted institutions
+      responses:
+        "200":
+          description: List of entrance exams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Exam"
+
+  /institutions:
+    get:
+      operationId: listInstitutions
+      tags: [institutions]
+      summary: List all government colleges and universities in India
+      responses:
+        "200":
+          description: List of institutions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Institution"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    StatsSummary:
+      type: object
+      properties:
+        outOfSchoolChildren:
+          type: integer
+        dropoutRateElementary:
+          type: number
+        adolescentsNotFinishingSecondary:
+          type: number
+        gdpSpendOnEducation:
+          type: number
+        schoolsWithInternet:
+          type: number
+        trainedTeachers:
+          type: number
+        adultLiteracyClasses:
+          type: integer
+      required:
+        - outOfSchoolChildren
+        - dropoutRateElementary
+        - adolescentsNotFinishingSecondary
+        - gdpSpendOnEducation
+        - schoolsWithInternet
+        - trainedTeachers
+        - adultLiteracyClasses
+
+    StateEducationStat:
+      type: object
+      properties:
+        state:
+          type: string
+        geoName:
+          type: string
+          description: Name matching GeoJSON NAME_1 property
+        region:
+          type: string
+          enum: [north, south, east, west, central, northeast]
+        dropoutRate:
+          type: number
+          description: Elementary dropout rate % (UDISE+ 2022-23)
+        primaryGer:
+          type: number
+          description: Primary Gross Enrollment Ratio %
+        secondaryGer:
+          type: number
+          description: Secondary Gross Enrollment Ratio %
+        literacyRate:
+          type: number
+          description: Overall literacy rate % (Census 2011 / NFHS-5)
+        outOfSchoolChildren:
+          type: integer
+          description: Estimated out-of-school children
+        girlsDropoutRate:
+          type: number
+          description: Girls-specific elementary dropout rate %
+        highlight:
+          type: string
+          description: One notable fact or program about the state
+      required:
+        - state
+        - geoName
+        - region
+        - dropoutRate
+        - primaryGer
+        - secondaryGer
+        - literacyRate
+        - outOfSchoolChildren
+        - girlsDropoutRate
+        - highlight
+
+    DropoutRate:
+      type: object
+      properties:
+        group:
+          type: string
+        rate:
+          type: number
+        description:
+          type: string
+      required:
+        - group
+        - rate
+        - description
+
+    EnrollmentTrend:
+      type: object
+      properties:
+        year:
+          type: string
+        primaryEnrollment:
+          type: number
+        secondaryEnrollment:
+          type: number
+        higherEnrollment:
+          type: number
+      required:
+        - year
+        - primaryEnrollment
+        - secondaryEnrollment
+        - higherEnrollment
+
+    Barrier:
+      type: object
+      properties:
+        id:
+          type: integer
+        category:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        affectedGroups:
+          type: array
+          items:
+            type: string
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+      required:
+        - id
+        - category
+        - title
+        - description
+        - affectedGroups
+        - severity
+
+    Intervention:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        level:
+          type: string
+          enum: [early_childhood, primary, secondary, vocational, adult, digital]
+        description:
+          type: string
+        impact:
+          type: string
+        organization:
+          type: string
+        organizationUrl:
+          type: string
+        organizationLinks:
+          type: array
+          items:
+            $ref: "#/components/schemas/InstitutionLink"
+        evidenceLevel:
+          type: string
+          enum: [pilot, moderate, strong, rigorous_rct]
+      required:
+        - id
+        - name
+        - level
+        - description
+        - impact
+        - organization
+        - organizationUrl
+        - organizationLinks
+        - evidenceLevel
+
+    CaseStudy:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        location:
+          type: string
+        state:
+          type: string
+        organization:
+          type: string
+        organizationUrl:
+          type: string
+        targetGroup:
+          type: string
+        model:
+          type: string
+        costPerBeneficiary:
+          type: ["string", "null"]
+        outcomes:
+          type: string
+        yearsActive:
+          type: string
+        fundingSource:
+          type: string
+        fundingLinks:
+          type: array
+          items:
+            $ref: "#/components/schemas/InstitutionLink"
+      required:
+        - id
+        - title
+        - location
+        - state
+        - organization
+        - organizationUrl
+        - targetGroup
+        - model
+        - costPerBeneficiary
+        - outcomes
+        - yearsActive
+        - fundingSource
+        - fundingLinks
+
+    InstitutionLink:
+      type: object
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+      required:
+        - name
+        - url
+
+    FundingMechanism:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+          enum: [government, csr, ngo, impact_bond, international_aid, mixed]
+        description:
+          type: string
+        examples:
+          type: array
+          items:
+            type: string
+        scale:
+          type: string
+        websiteUrl:
+          type: string
+        institutionLinks:
+          type: array
+          items:
+            $ref: "#/components/schemas/InstitutionLink"
+      required:
+        - id
+        - name
+        - type
+        - description
+        - examples
+        - scale
+        - websiteUrl
+        - institutionLinks
+
+    DonationRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        amount:
+          type: number
+        currency:
+          type: string
+        message:
+          type: ["string", "null"]
+      required:
+        - name
+        - email
+        - amount
+        - currency
+
+    DonationResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        message:
+          type: string
+        name:
+          type: string
+        amount:
+          type: number
+      required:
+        - id
+        - message
+        - name
+        - amount
+
+    ContactRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        subject:
+          type: string
+        message:
+          type: string
+        type:
+          type: string
+          enum: [volunteer, partner, researcher, media, other]
+      required:
+        - name
+        - email
+        - subject
+        - message
+        - type
+
+    ContactResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        message:
+          type: string
+      required:
+        - id
+        - message
+
+    InstitutionType:
+      type: string
+      enum:
+        - central-university
+        - state-university
+        - iit
+        - nit
+        - iim
+        - aiims
+        - iiit
+        - nlaw
+        - cfti
+        - deemed-university
+        - du-college
+        - mu-college
+        - sppu-college
+        - other
+
+    ExamCategory:
+      type: string
+      enum:
+        - engineering
+        - medical
+        - management
+        - law
+        - design
+        - sciences
+        - civil-services
+
+    ExamLevel:
+      type: string
+      enum: [ug, pg, both]
+
+    ExamMode:
+      type: string
+      enum: [online, offline, both]
+
+    ExamFrequency:
+      type: string
+      enum: [annual, biannual]
+
+    Exam:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        shortName:
+          type: string
+        category:
+          $ref: "#/components/schemas/ExamCategory"
+        level:
+          $ref: "#/components/schemas/ExamLevel"
+        conductingBody:
+          type: string
+        conductingBodyUrl:
+          type: string
+        officialWebsite:
+          type: string
+        description:
+          type: string
+        eligibility:
+          type: string
+        applicationStart:
+          type: string
+        applicationEnd:
+          type: string
+        examDate:
+          type: string
+        resultDate:
+          type: string
+        totalSeats:
+          type: ["integer", "null"]
+        candidatesAppearing:
+          type: ["string", "null"]
+        mode:
+          $ref: "#/components/schemas/ExamMode"
+        frequency:
+          $ref: "#/components/schemas/ExamFrequency"
+        eligibleInstitutionTypes:
+          type: array
+          items:
+            type: string
+        acceptedBy:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - name
+        - shortName
+        - category
+        - level
+        - conductingBody
+        - conductingBodyUrl
+        - officialWebsite
+        - description
+        - eligibility
+        - applicationStart
+        - applicationEnd
+        - examDate
+        - resultDate
+        - totalSeats
+        - candidatesAppearing
+        - mode
+        - frequency
+        - eligibleInstitutionTypes
+        - acceptedBy
+
+    Institution:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        shortName:
+          type: string
+        type:
+          $ref: "#/components/schemas/InstitutionType"
+        state:
+          type: string
+        city:
+          type: string
+        established:
+          type: integer
+        website:
+          type: string
+        naacGrade:
+          type: string
+        affiliation:
+          type: string
+        description:
+          type: string
+        courses:
+          type: array
+          items:
+            type: string
+        ugcRecognized:
+          type: boolean
+        nirfRank:
+          type: integer
+      required:
+        - id
+        - name
+        - type
+        - state
+        - city
+        - established
+        - website
+        - affiliation
+        - description
+        - courses
+        - ugcRecognized

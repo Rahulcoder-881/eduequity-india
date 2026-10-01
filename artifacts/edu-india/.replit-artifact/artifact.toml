@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Education for Unprivileged Communities in India"
+version = "1.0.0"
+id = "artifacts/edu-india"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18404
+
+[services.development]
+run = "pnpm --filter @workspace/edu-india run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/edu-india", "run", "build" ]
+publicDir = "artifacts/edu-india/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18404"
+BASE_PATH = "/"
