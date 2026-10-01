@@ -1,2 +1,3 @@
 - [Resend connector authentication](resend-connector-auth.md) — provider API-key failures require repairing the Replit connection, not changing application request code.
 - [Education source freshness](education-source-freshness.md) — prefer the current UDISE dashboard/report and PIB budget pages; deep government PDFs and NGO paths often move.
+- [GitHub empty-repo uploads](github-empty-repo-bootstrap.md) — seed a new empty repository with an existing file through the Contents API before uploading Git blobs.
